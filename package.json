@@ -1,0 +1,14 @@
+{
+  "name": "node-fastify",
+  "version": "1.0.0",
+  "description": "A simple node and fastify app.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sumit Yadav",
+  "license": "MIT",
+  "dependencies": {
+    "fastify": "^4.23.2"
+  }
+}
