@@ -1,4 +1,6 @@
 const User = require('../models/user.model')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 const getAllUsers = async (req, reply) => {
   try {
@@ -23,8 +25,8 @@ const getUserById = async (req, reply) => {
 
 const createUser = async (req, reply) => {
   try {
-    const { name, email } = req.body;
-    const user = new User({ name: name, email: email })
+    const { name, email, password } = req.body;
+    const user = new User({ name: name, email: email, password })
     const newUser = await user.save()
 
     reply.send(newUser)
@@ -61,10 +63,32 @@ const deleteUser = async (req, reply) => {
   }
 }
 
+const loginUser = async (req, reply) => {
+  try {
+    const { email, password } = req.body;
+    // Query
+    const user = await User.findOne({ email })
+    // Error handling
+    const isMatch = bcrypt.compareSync(password, user.password)
+    if (!isMatch) {
+      reply.code(400).send("Wrong pass")
+    }
+    // Success
+    const tokenPayload = { email, name: user.name, id: user._id }
+    // Generate token
+    const token = jwt.sign(tokenPayload, 'SECRET', { expiresIn: '30m' })
+
+    reply.send({ accessToken: token, msg: "Login success" })
+  } catch (error) {
+    reply.code(400).send(error)
+  }
+}
+
 module.exports = {
   getAllUsers,
   getUserById,
   createUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  loginUser
 }

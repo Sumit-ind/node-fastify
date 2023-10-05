@@ -2,12 +2,16 @@ const fastify = require('fastify')({ logger: true });
 const mongoose = require('mongoose')
 
 // Import routes
-const userRoute = require('./routes/user.route')
+const userRoute = require('./routes/user.route');
+const { verifyToken } = require('./middleware/auth');
 
 const PORT = process.env.PORT || 5500;
 
 // Register Routes
 fastify.register(userRoute, { prefix: '/api/v1/users' })
+
+// Auth at the app level
+// fastify.addHook('preHandler', verifyToken)
 
 // Connect DB
 mongoose.connect('YOUR_MONGODB_STRING', {

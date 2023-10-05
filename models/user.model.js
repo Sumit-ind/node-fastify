@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -7,6 +8,11 @@ const userSchema = new mongoose.Schema({
     unique: true,
     trim: true,
     lowercase: true
+  },
+
+  password: {
+    type: String,
+    required: true
   },
 
   name: {
@@ -20,6 +26,15 @@ const userSchema = new mongoose.Schema({
     enum: ["CIA", "CSE", "MM"],
     default: "CIA"
   }
+})
+
+userSchema.pre('save', async function (next) {
+  // Gen salt
+  const salt = bcrypt.genSaltSync(10)
+  const hashPss = bcrypt.hashSync(this.password, salt)
+
+  this.password = hashPss
+  next()
 })
 
 const User = mongoose.model('User', userSchema)
