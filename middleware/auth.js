@@ -9,7 +9,7 @@ const verifyToken = async (req, reply) => {
     // Remove Bearer word
     const token = bearerToken.split(' ')[1]
     // Verify token
-    const user = jwt.verify(token, 'SECRET')
+    const user = jwt.verify(token, process.env.JWT_SECRET)
     if (!user) {
       return reply.code(401).send({ error: "Unauthorized" })
     }

@@ -1,3 +1,6 @@
+// Loading env
+require('dotenv').config()
+
 const fastify = require('fastify')({ logger: true });
 const mongoose = require('mongoose')
 
@@ -14,7 +17,7 @@ fastify.register(userRoute, { prefix: '/api/v1/users' })
 // fastify.addHook('preHandler', verifyToken)
 
 // Connect DB
-mongoose.connect('YOUR_MONGODB_STRING', {
+mongoose.connect(process.env.MONGO_DB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(_ => console.log('Connected DB...')).catch(err => console.log('err :>> ', err));

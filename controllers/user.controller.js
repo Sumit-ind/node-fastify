@@ -76,7 +76,7 @@ const loginUser = async (req, reply) => {
     // Success
     const tokenPayload = { email, name: user.name, id: user._id }
     // Generate token
-    const token = jwt.sign(tokenPayload, 'SECRET', { expiresIn: '30m' })
+    const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: '30m' })
 
     reply.send({ accessToken: token, msg: "Login success" })
   } catch (error) {
